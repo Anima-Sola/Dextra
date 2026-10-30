@@ -2,8 +2,15 @@ import Chat from "@/components/Chat/Chat";
 import SideBar from "@/components/SideBar/SideBar";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import { useTheme } from "@/hooks/useTheme";
+import { useChatsStore } from "@/store/chatsStore";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import Animated, {
   interpolate,
   interpolateColor,
@@ -18,6 +25,7 @@ export default function HomeScreen() {
   const theme = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isOpenAnimationComplete, setIsOpenAnimationComplete] = useState(false);
+  const { currentChatIndex } = useChatsStore();
   const drawerProgress = useSharedValue(0);
   const sidebarWidth = width * 0.8;
 
@@ -36,6 +44,7 @@ export default function HomeScreen() {
   }, [drawerProgress, isSidebarOpen, setIsOpenAnimationComplete]);
 
   const toggleSidebar = () => {
+    Keyboard.dismiss();
     setIsOpenAnimationComplete(false);
     setIsSidebarOpen((isOpen) => !isOpen);
   };
@@ -77,18 +86,21 @@ export default function HomeScreen() {
       <View style={styles.container}>
         <Animated.View
           pointerEvents={isSidebarOpen ? "box-none" : "none"}
-          style={[styles.sidebar, sidebarStyle]}
+          style={[styles.fill, sidebarStyle]}
         >
-          <SideBar />
+          <SideBar onChatSelect={toggleSidebar} />
         </Animated.View>
         <Animated.View style={[styles.chat, chatStyle]}>
-          <Chat onMenuPress={toggleSidebar} />
+          <Chat
+            onMenuPress={toggleSidebar}
+            isInteractionDisabled={isSidebarOpen}
+          />
           {isSidebarOpen && isOpenAnimationComplete && (
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Close menu"
               onPress={toggleSidebar}
-              style={StyleSheet.absoluteFill}
+              style={styles.fill}
             />
           )}
         </Animated.View>
@@ -102,8 +114,14 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: "hidden",
   },
-  sidebar: {
-    ...StyleSheet.absoluteFill,
+  fill: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    zIndex: 100,
+    elevation: 100,
   },
   chat: {
     flex: 1,

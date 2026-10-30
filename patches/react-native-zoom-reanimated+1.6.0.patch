@@ -1,0 +1,76 @@
+diff --git a/node_modules/react-native-zoom-reanimated/lib/commonjs/Zoom.js b/node_modules/react-native-zoom-reanimated/lib/commonjs/Zoom.js
+index 686a441..db25bfc 100644
+--- a/node_modules/react-native-zoom-reanimated/lib/commonjs/Zoom.js
++++ b/node_modules/react-native-zoom-reanimated/lib/commonjs/Zoom.js
+@@ -43,12 +43,12 @@ function ZoomView({
+   // Bridge scale changes to JS callback if provided
+   (0, _reactNativeReanimated.useAnimatedReaction)(() => scale.value, (currentScale, previousScale) => {
+     if (onZoomChange && currentScale !== previousScale) (0, _reactNativeReanimated.runOnJS)(onZoomChange)(currentScale);
+-  }, [onZoomChange]);
++  }, _reactNative.Platform.OS === 'web' ? [onZoomChange] : undefined);
+ 
+   // Bridge zoom state changes to JS callback if provided
+   (0, _reactNativeReanimated.useAnimatedReaction)(() => isZoomedIn.value, (currentIsZoomed, previousIsZoomed) => {
+     if (onZoomStateChange && currentIsZoomed !== previousIsZoomed) (0, _reactNativeReanimated.runOnJS)(onZoomStateChange)(currentIsZoomed);
+-  }, [onZoomStateChange]);
++  }, _reactNative.Platform.OS === 'web' ? [onZoomStateChange] : undefined);
+   return /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNativeGestureHandler.GestureHandlerRootView, {
+     style: [_styles.default.container, style],
+     children: /*#__PURE__*/(0, _jsxRuntime.jsx)(_reactNativeGestureHandler.GestureDetector, {
+diff --git a/node_modules/react-native-zoom-reanimated/lib/module/Zoom.js b/node_modules/react-native-zoom-reanimated/lib/module/Zoom.js
+index 3c605a7..13186f7 100644
+--- a/node_modules/react-native-zoom-reanimated/lib/module/Zoom.js
++++ b/node_modules/react-native-zoom-reanimated/lib/module/Zoom.js
+@@ -1,7 +1,7 @@
+ "use strict";
+ 
+ import React from 'react';
+-import { View } from 'react-native';
++import { Platform, View } from 'react-native';
+ import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+ import Animated, { runOnJS, useAnimatedReaction } from 'react-native-reanimated';
+ import { resolveGestureApiVersion } from "./gestureApi.js";
+@@ -37,12 +37,12 @@ function ZoomView({
+   // Bridge scale changes to JS callback if provided
+   useAnimatedReaction(() => scale.value, (currentScale, previousScale) => {
+     if (onZoomChange && currentScale !== previousScale) runOnJS(onZoomChange)(currentScale);
+-  }, [onZoomChange]);
++  }, Platform.OS === 'web' ? [onZoomChange] : undefined);
+ 
+   // Bridge zoom state changes to JS callback if provided
+   useAnimatedReaction(() => isZoomedIn.value, (currentIsZoomed, previousIsZoomed) => {
+     if (onZoomStateChange && currentIsZoomed !== previousIsZoomed) runOnJS(onZoomStateChange)(currentIsZoomed);
+-  }, [onZoomStateChange]);
++  }, Platform.OS === 'web' ? [onZoomStateChange] : undefined);
+   return /*#__PURE__*/_jsx(GestureHandlerRootView, {
+     style: [styles.container, style],
+     children: /*#__PURE__*/_jsx(GestureDetector, {
+diff --git a/node_modules/react-native-zoom-reanimated/src/Zoom.tsx b/node_modules/react-native-zoom-reanimated/src/Zoom.tsx
+index 3674ce4..31f451b 100644
+--- a/node_modules/react-native-zoom-reanimated/src/Zoom.tsx
++++ b/node_modules/react-native-zoom-reanimated/src/Zoom.tsx
+@@ -1,5 +1,5 @@
+ import React, { type PropsWithChildren } from 'react'
+-import { View } from 'react-native'
++import { Platform, View } from 'react-native'
+ import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
+ import Animated, { runOnJS, useAnimatedReaction } from 'react-native-reanimated'
+ import { resolveGestureApiVersion } from './gestureApi'
+@@ -53,7 +53,7 @@ function ZoomView({
+       if (onZoomChange && currentScale !== previousScale)
+         runOnJS(onZoomChange)(currentScale)
+     },
+-    [onZoomChange]
++    Platform.OS === 'web' ? [onZoomChange] : undefined
+   )
+ 
+   // Bridge zoom state changes to JS callback if provided
+@@ -63,7 +63,7 @@ function ZoomView({
+       if (onZoomStateChange && currentIsZoomed !== previousIsZoomed)
+         runOnJS(onZoomStateChange)(currentIsZoomed)
+     },
+-    [onZoomStateChange]
++    Platform.OS === 'web' ? [onZoomStateChange] : undefined
+   )
+ 
+   return (

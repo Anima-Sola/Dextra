@@ -1,0 +1,191 @@
+diff --git a/node_modules/react-native-gifted-chat/lib/MessageImage.js b/node_modules/react-native-gifted-chat/lib/MessageImage.js
+index 5af4bc3..f60b70c 100644
+--- a/node_modules/react-native-gifted-chat/lib/MessageImage.js
++++ b/node_modules/react-native-gifted-chat/lib/MessageImage.js
+@@ -1,5 +1,5 @@
+ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+-import { Image, StyleSheet, View, useWindowDimensions, StatusBar, Text } from 'react-native';
++import { Image, Platform, StyleSheet, View, useWindowDimensions, StatusBar, Text } from 'react-native';
+ import { BaseButton, GestureHandlerRootView } from 'react-native-gesture-handler';
+ import { OverKeyboardView } from 'react-native-keyboard-controller';
+ import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing, runOnJS, } from 'react-native-reanimated';
+@@ -31,10 +31,10 @@ function ModalContent({ isVisible, imageSource, modalImageDimensions, imageProps
+     const modalAnimatedStyle = useAnimatedStyle(() => ({
+         opacity: modalOpacity.value,
+         transform: [{ scale: modalScale.value }],
+-    }), [modalOpacity, modalScale]);
++    }), Platform.OS === 'web' ? [modalOpacity, modalScale] : undefined);
+     const modalBorderRadiusStyle = useAnimatedStyle(() => ({
+         borderRadius: modalBorderRadius.value,
+-    }), [modalBorderRadius]);
++    }), Platform.OS === 'web' ? [modalBorderRadius] : undefined);
+     return (<>
+       <StatusBar animated barStyle='dark-content'/>
+       <Animated.View style={[styles.modalOverlay, modalAnimatedStyle, modalBorderRadiusStyle]}>
+diff --git a/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/DayAnimated/index.js b/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/DayAnimated/index.js
+index 9e3f9de..d929bdf 100644
+--- a/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/DayAnimated/index.js
++++ b/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/DayAnimated/index.js
+@@ -1,4 +1,5 @@
+ import React, { useCallback, useEffect, useMemo, useState } from 'react';
++import { Platform } from 'react-native';
+ import Animated, { interpolate, useAnimatedStyle, useDerivedValue, useSharedValue, useAnimatedReaction, withTiming, runOnJS } from 'react-native-reanimated';
+ import { Day } from '../../../Day';
+ import stylesCommon from '../../../styles';
+@@ -39,13 +40,13 @@ export const DayAnimated = ({ scrolledY, daysPositions, listHeight, renderDay, m
+                 return day.createdAt;
+         }
+         return messagesDates[messagesDates.length - 1];
+-    }, [daysPositionsArray, absoluteScrolledPositionToBottomOfDay, messagesDates, containerHeight, dayBottomMargin]);
++    }, Platform.OS === 'web' ? [daysPositionsArray, absoluteScrolledPositionToBottomOfDay, messagesDates, containerHeight, dayBottomMargin] : undefined);
+     const style = useAnimatedStyle(() => ({
+         top: interpolate(relativeScrolledPositionToBottomOfDay.value, [-dayTopOffset, -0.0001, 0, isLoadingAnim.value ? 0 : containerHeight.value + dayTopOffset], [dayTopOffset, dayTopOffset, -containerHeight.value, isLoadingAnim.value ? -containerHeight.value : dayTopOffset], 'clamp'),
+-    }), [relativeScrolledPositionToBottomOfDay, containerHeight, dayTopOffset, isLoadingAnim]);
++    }), Platform.OS === 'web' ? [relativeScrolledPositionToBottomOfDay, containerHeight, dayTopOffset, isLoadingAnim] : undefined);
+     const contentStyle = useAnimatedStyle(() => ({
+         opacity: opacity.value,
+-    }), [opacity]);
++    }), Platform.OS === 'web' ? [opacity] : undefined);
+     const fadeOut = useCallback(() => {
+         'worklet';
+         opacity.value = withTiming(0, { duration: 500 });
+@@ -66,11 +67,11 @@ export const DayAnimated = ({ scrolledY, daysPositions, listHeight, renderDay, m
+             return;
+         opacity.value = withTiming(1, { duration: 500 });
+         runOnJS(scheduleFadeOut)();
+-    }, [scrolledY, scheduleFadeOut, daysPositionsArray]);
++    }, Platform.OS === 'web' ? [scrolledY, scheduleFadeOut, daysPositionsArray] : undefined);
+     useAnimatedReaction(() => createdAtDate.value, (value, prevValue) => {
+         if (value && value !== prevValue)
+             runOnJS(setCreatedAt)(value);
+-    }, [createdAtDate]);
++    }, Platform.OS === 'web' ? [createdAtDate] : undefined);
+     useEffect(() => {
+         isLoadingAnim.value = isLoading;
+     }, [isLoadingAnim, isLoading]);
+diff --git a/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/Item/index.js b/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/Item/index.js
+index 18c7546..67f9e67 100644
+--- a/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/Item/index.js
++++ b/node_modules/react-native-gifted-chat/lib/MessagesContainer/components/Item/index.js
+@@ -1,5 +1,5 @@
+ import React, { useCallback, useMemo } from 'react';
+-import { View } from 'react-native';
++import { Platform, View } from 'react-native';
+ import Animated, { interpolate, useAnimatedStyle, useDerivedValue, useSharedValue } from 'react-native-reanimated';
+ import { Day } from '../../../Day';
+ import { Message } from '../../../Message';
+@@ -7,7 +7,7 @@ import { isSameDay } from '../../../utils';
+ export * from './types';
+ // y-position of current scroll position relative to the bottom of the day container. (since we have inverted list it is bottom)
+ export const useAbsoluteScrolledPositionToBottomOfDay = (listHeight, scrolledY, containerHeight, dayBottomMargin, dayTopOffset) => {
+-    const absoluteScrolledPositionToBottomOfDay = useDerivedValue(() => listHeight.value + scrolledY.value - containerHeight.value - dayBottomMargin - dayTopOffset, [listHeight, scrolledY, containerHeight, dayBottomMargin, dayTopOffset]);
++    const absoluteScrolledPositionToBottomOfDay = useDerivedValue(() => listHeight.value + scrolledY.value - containerHeight.value - dayBottomMargin - dayTopOffset, Platform.OS === 'web' ? [listHeight, scrolledY, containerHeight, dayBottomMargin, dayTopOffset] : undefined);
+     return absoluteScrolledPositionToBottomOfDay;
+ };
+ export const useRelativeScrolledPositionToBottomOfDay = (listHeight, scrolledY, daysPositions, containerHeight, dayBottomMargin, dayTopOffset, createdAt) => {
+@@ -37,13 +37,13 @@ export const useRelativeScrolledPositionToBottomOfDay = (listHeight, scrolledY,
+                 return day;
+         }
+         return undefined;
+-    }, [daysPositions, absoluteScrolledPositionToBottomOfDay, createdAt]);
++    }, Platform.OS === 'web' ? [daysPositions, absoluteScrolledPositionToBottomOfDay, createdAt] : undefined);
+     const relativeScrolledPositionToBottomOfDay = useDerivedValue(() => {
+         const scrolledBottomY = listHeight.value + scrolledY.value - ((currentDayPosition.value?.y ?? 0) +
+             (currentDayPosition.value?.height ?? 0) +
+             dayMarginTop);
+         return scrolledBottomY;
+-    }, [listHeight, scrolledY, currentDayPosition, dayMarginTop]);
++    }, Platform.OS === 'web' ? [listHeight, scrolledY, currentDayPosition, dayMarginTop] : undefined);
+     return relativeScrolledPositionToBottomOfDay;
+ };
+ const DayWrapper = (props) => {
+@@ -83,7 +83,7 @@ const AnimatedDayWrapper = (props) => {
+             1,
+             1,
+         ], 'clamp'),
+-    }), [relativeScrolledPositionToBottomOfDay, dayContainerHeight, dayTopOffset]);
++    }), Platform.OS === 'web' ? [relativeScrolledPositionToBottomOfDay, dayContainerHeight, dayTopOffset] : undefined);
+     return (<Animated.View style={style} onLayout={handleLayoutDayContainer}>
+       <DayWrapper {...rest}/>
+     </Animated.View>);
+diff --git a/node_modules/react-native-gifted-chat/lib/MessagesContainer/index.js b/node_modules/react-native-gifted-chat/lib/MessagesContainer/index.js
+index 14406fc..d5571cd 100644
+--- a/node_modules/react-native-gifted-chat/lib/MessagesContainer/index.js
++++ b/node_modules/react-native-gifted-chat/lib/MessagesContainer/index.js
+@@ -1,5 +1,5 @@
+ import React, { useCallback, useEffect, useMemo, useState } from 'react';
+-import { View, Text } from 'react-native';
++import { Platform, View, Text } from 'react-native';
+ import { Pressable } from 'react-native-gesture-handler';
+ import Animated, { runOnJS, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+ import { LoadEarlierMessages } from '../LoadEarlierMessages';
+@@ -21,7 +21,7 @@ export const MessagesContainer = (props) => {
+     const [isScrollToBottomVisible, setIsScrollToBottomVisible] = useState(false);
+     const scrollToBottomStyleAnim = useAnimatedStyle(() => ({
+         opacity: scrollToBottomOpacity.value,
+-    }), [scrollToBottomOpacity]);
++    }), Platform.OS === 'web' ? [scrollToBottomOpacity] : undefined);
+     const daysPositions = useSharedValue({});
+     const listHeight = useSharedValue(0);
+     const scrolledY = useSharedValue(0);
+diff --git a/node_modules/react-native-gifted-chat/lib/Send.js b/node_modules/react-native-gifted-chat/lib/Send.js
+index b7b8236..41be535 100644
+--- a/node_modules/react-native-gifted-chat/lib/Send.js
++++ b/node_modules/react-native-gifted-chat/lib/Send.js
+@@ -1,5 +1,5 @@
+ import React, { useMemo, useCallback, useEffect } from 'react';
+-import { StyleSheet, Text } from 'react-native';
++import { Platform, StyleSheet, Text } from 'react-native';
+ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+ import { Color } from './Color';
+ import { TouchableOpacity } from './components/TouchableOpacity';
+@@ -21,7 +21,7 @@ export const Send = ({ text, containerStyle, children, textStyle, label = 'Send'
+     }, [isVisible, opacity]);
+     const animatedStyle = useAnimatedStyle(() => ({
+         opacity: opacity.value,
+-    }), [opacity]);
++    }), Platform.OS === 'web' ? [opacity] : undefined);
+     return (<Animated.View style={[styles.container, containerStyle, animatedStyle]} pointerEvents={isVisible ? 'auto' : 'none'}>
+       <TouchableOpacity testID={TEST_ID.SEND_TOUCHABLE} style={styles.touchable} onPress={handleOnPress} accessible accessibilityLabel='send' accessibilityRole='button' {...sendButtonProps}>
+         {children ||
+diff --git a/node_modules/react-native-gifted-chat/lib/TypingIndicator/index.js b/node_modules/react-native-gifted-chat/lib/TypingIndicator/index.js
+index 6b09171..cf565fd 100644
+--- a/node_modules/react-native-gifted-chat/lib/TypingIndicator/index.js
++++ b/node_modules/react-native-gifted-chat/lib/TypingIndicator/index.js
+@@ -1,5 +1,5 @@
+ import React, { useCallback, useEffect, useState, useMemo } from 'react';
+-import { View } from 'react-native';
++import { Platform, View } from 'react-native';
+ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withTiming, } from 'react-native-reanimated';
+ import stylesCommon from '../styles';
+ import styles from './styles';
+@@ -15,17 +15,17 @@ const DotsAnimation = () => {
+         transform: [{
+                 translateY: dot1.value,
+             }],
+-    }), [dot1]);
++    }), Platform.OS === 'web' ? [dot1] : undefined);
+     const dot2Style = useAnimatedStyle(() => ({
+         transform: [{
+                 translateY: dot2.value,
+             }],
+-    }), [dot2]);
++    }), Platform.OS === 'web' ? [dot2] : undefined);
+     const dot3Style = useAnimatedStyle(() => ({
+         transform: [{
+                 translateY: dot3.value,
+             }],
+-    }), [dot3]);
++    }), Platform.OS === 'web' ? [dot3] : undefined);
+     useEffect(() => {
+         dot1.value = withRepeat(withSequence(withTiming(topY, { duration }), withTiming(bottomY, { duration })), 0, true);
+     }, [dot1, topY, bottomY, duration]);
+@@ -54,7 +54,7 @@ export const TypingIndicator = ({ isTyping, style }) => {
+         ],
+         height: heightScale.value,
+         marginBottom: marginScale.value,
+-    }), [yCoords, heightScale, marginScale]);
++    }), Platform.OS === 'web' ? [yCoords, heightScale, marginScale] : undefined);
+     const slideIn = useCallback(() => {
+         const duration = 250;
+         yCoords.value = withTiming(0, { duration });

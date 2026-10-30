@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Dextra",
-    "slug": "Dextra",
+    "name": "Dextra AI",
+    "slug": "Dextra_AI",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -34,7 +34,8 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
-      ]
+      ],
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,

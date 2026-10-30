@@ -1,5 +1,5 @@
 import { ImageSourcePropType } from "react-native";
-import { ChatType } from "./types";
+import { ChatType, MessageType } from "./types";
 
 export interface ISettingsSlice {
   mode: "light" | "dark" | "system";
@@ -12,6 +12,13 @@ export interface IChatsSlice {
   currentChatIndex: number;
   chats: Array<ChatType>;
   setCurrentChatIndex: (index: number) => void;
+  deleteChat: (index: number) => void;
+  clearChatMessages: (index: number) => void;
+  addChat: (title: string) => void;
+  updateChatTitle: (index: number, title: string) => void;
+  updateCurrentChatMessages: (
+    updateMessages: (messages: MessageType[]) => MessageType[],
+  ) => void;
 }
 
 export interface IUserSlice {
