@@ -23,14 +23,8 @@ const SideBar = ({ onChatSelect }: SideBarProps) => {
   const styles = useThemedStyles(createStyles);
   const router = useRouter();
   const { name, avatar } = useUserStore();
-  const {
-    currentChatIndex,
-    setCurrentChatIndex,
-    chats,
-    deleteChat,
-    clearChatMessages,
-    updateChatTitle,
-  } = useChatsStore();
+  const { currentChatIndex, setCurrentChatIndex, chats, deleteChat } =
+    useChatsStore();
 
   const selectChat = (chatId: number) => {
     setCurrentChatIndex(chatId);
@@ -38,13 +32,6 @@ const SideBar = ({ onChatSelect }: SideBarProps) => {
   };
 
   const deleteChatById = (chatId: number) => {
-    if (chats.length === 1) {
-      clearChatMessages(chatId);
-      updateChatTitle(chatId, `Новый чат`);
-      onChatSelect?.();
-      return;
-    }
-
     deleteChat(chatId);
 
     if (chatId <= currentChatIndex && currentChatIndex > 0) {
@@ -53,9 +40,6 @@ const SideBar = ({ onChatSelect }: SideBarProps) => {
 
     onChatSelect?.();
   };
-
-  const isEmpty =
-    chats[currentChatIndex].messages.length === 0 && chats.length === 1;
 
   return (
     <View style={styles.container}>
@@ -87,7 +71,7 @@ const SideBar = ({ onChatSelect }: SideBarProps) => {
               onPress={() => selectChat(key)}
             >
               <Text style={chatTitleStyle}>{chat.title}</Text>
-              {!isEmpty && (
+              {key === currentChatIndex && (
                 <TouchableOpacity onPress={() => deleteChatById(key)}>
                   <Feather
                     name="trash-2"

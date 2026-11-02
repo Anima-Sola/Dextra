@@ -3,12 +3,7 @@ import { create } from "zustand";
 
 export const useChatsStore = create<IChatsSlice>((set) => ({
   currentChatIndex: 0,
-  chats: [
-    {
-      title: "Новый чат",
-      messages: [],
-    },
-  ],
+  chats: [],
   setCurrentChatIndex: (index) => set({ currentChatIndex: index }),
   deleteChat: (index) =>
     set((state) => {

@@ -5,12 +5,12 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ITheme } from "../../constants/interfaces";
 import { useThemedStyles } from "../../hooks/useThemedStyles";
 
-type TopBarProps = {
+type ChatTopBarProps = {
   onMenuPress: () => void;
   onAddPress: () => void;
 };
 
-const TopBar: FC<TopBarProps> = ({ onMenuPress, onAddPress }) => {
+const ChatTopBar: FC<ChatTopBarProps> = ({ onMenuPress, onAddPress }) => {
   const styles = useThemedStyles(createStyles);
 
   return (
@@ -40,4 +40,4 @@ export const createStyles = (theme: ITheme) =>
     },
   });
 
-export default TopBar;
+export default ChatTopBar;

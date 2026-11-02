@@ -2,7 +2,6 @@ import Chat from "@/components/Chat/Chat";
 import SideBar from "@/components/SideBar/SideBar";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import { useTheme } from "@/hooks/useTheme";
-import { useChatsStore } from "@/store/chatsStore";
 import { useEffect, useState } from "react";
 import {
   Keyboard,
@@ -11,6 +10,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { GestureDetector, usePanGesture } from "react-native-gesture-handler";
 import Animated, {
   interpolate,
   interpolateColor,
@@ -25,7 +25,6 @@ export default function HomeScreen() {
   const theme = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isOpenAnimationComplete, setIsOpenAnimationComplete] = useState(false);
-  const { currentChatIndex } = useChatsStore();
   const drawerProgress = useSharedValue(0);
   const sidebarWidth = width * 0.8;
 
@@ -48,6 +47,21 @@ export default function HomeScreen() {
     setIsOpenAnimationComplete(false);
     setIsSidebarOpen((isOpen) => !isOpen);
   };
+
+  const panGesture = usePanGesture({
+    activeOffsetX: [-20, 20],
+    failOffsetY: [-15, 15],
+    runOnJS: true,
+    onDeactivate: ({ canceled, translationX }) => {
+      if (
+        !canceled &&
+        ((!isSidebarOpen && translationX > 60) ||
+          (isSidebarOpen && translationX < -60))
+      ) {
+        toggleSidebar();
+      }
+    },
+  });
 
   const sidebarStyle = useAnimatedStyle(() => ({
     transform: [
@@ -83,28 +97,30 @@ export default function HomeScreen() {
 
   return (
     <Wrapper>
-      <View style={styles.container}>
-        <Animated.View
-          pointerEvents={isSidebarOpen ? "box-none" : "none"}
-          style={[styles.fill, sidebarStyle]}
-        >
-          <SideBar onChatSelect={toggleSidebar} />
-        </Animated.View>
-        <Animated.View style={[styles.chat, chatStyle]}>
-          <Chat
-            onMenuPress={toggleSidebar}
-            isInteractionDisabled={isSidebarOpen}
-          />
-          {isSidebarOpen && isOpenAnimationComplete && (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Close menu"
-              onPress={toggleSidebar}
-              style={styles.fill}
+      <GestureDetector gesture={panGesture}>
+        <View style={styles.container}>
+          <Animated.View
+            pointerEvents={isSidebarOpen ? "box-none" : "none"}
+            style={[styles.fill, sidebarStyle]}
+          >
+            <SideBar onChatSelect={toggleSidebar} />
+          </Animated.View>
+          <Animated.View style={[styles.chat, chatStyle]}>
+            <Chat
+              onMenuPress={toggleSidebar}
+              isInteractionDisabled={isSidebarOpen}
             />
-          )}
-        </Animated.View>
-      </View>
+            {isSidebarOpen && isOpenAnimationComplete && (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Close menu"
+                onPress={toggleSidebar}
+                style={styles.fill}
+              />
+            )}
+          </Animated.View>
+        </View>
+      </GestureDetector>
     </Wrapper>
   );
 }
@@ -120,8 +136,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    zIndex: 100,
-    elevation: 100,
   },
   chat: {
     flex: 1,

@@ -10,9 +10,10 @@ import {
 
 type WrapperProps = {
   children: ReactNode;
+  backgroundColor?: string;
 };
 
-export default function Wrapper({ children }: WrapperProps) {
+export default function Wrapper({ children, backgroundColor }: WrapperProps) {
   const styles = useThemedStyles(createStyles);
   const insets = useSafeAreaInsets();
 
@@ -22,6 +23,7 @@ export default function Wrapper({ children }: WrapperProps) {
         <View
           style={{
             ...styles.content,
+            backgroundColor: backgroundColor || styles.content.backgroundColor,
             paddingBottom: insets.bottom,
             paddingLeft: insets.left,
             paddingRight: insets.right,

@@ -1,11 +1,10 @@
-import TopBar from "@/components/TopBar/TopBar";
+import ChatTopBar from "@/components/TopBars/ChatTopBar";
 import fontSizes from "@/constants/fontSizes";
 import { ITheme } from "@/constants/interfaces";
 import { MessageType } from "@/constants/types";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useChatsStore } from "@/store/chatsStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useCallback } from "react";
 import { Alert, Image, Platform, StyleSheet, Text, View } from "react-native";
 import {
   Bubble,
@@ -31,24 +30,25 @@ const Chat = ({ onMenuPress, isInteractionDisabled }: ChatProps) => {
     addChat,
     setCurrentChatIndex,
   } = useChatsStore();
-  const messages = chats[currentChatIndex].messages;
+  const messages = chats[currentChatIndex]?.messages ?? [];
 
-  const onSend = useCallback(
-    (newMessages: MessageType[] = []) => {
-      updateCurrentChatMessages((previousMessages) =>
-        GiftedChat.append(previousMessages, newMessages),
-      );
-    },
-    [updateCurrentChatMessages],
-  );
+  const onSend = (newMessages: MessageType[]) => {
+    if (!chats[currentChatIndex]) {
+      addChat(`Новый чат ${chats.length + 1}`);
+      setCurrentChatIndex(chats.length);
+    }
 
-  const createNewChat = () => {
+    updateCurrentChatMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, newMessages),
+    );
+  };
+
+  const openNewChat = () => {
     if (messages.length === 0) {
       Alert.alert("Вы уже в новом чате.");
       return;
     }
 
-    addChat(`Новый чат ${chats.length + 1}`);
     setCurrentChatIndex(chats.length);
   };
 
@@ -57,7 +57,7 @@ const Chat = ({ onMenuPress, isInteractionDisabled }: ChatProps) => {
       pointerEvents={isInteractionDisabled ? "none" : "auto"}
       style={styles.container}
     >
-      <TopBar onMenuPress={onMenuPress} onAddPress={createNewChat} />
+      <ChatTopBar onMenuPress={onMenuPress} onAddPress={openNewChat} />
       <GiftedChat
         messages={messages}
         onSend={onSend}
