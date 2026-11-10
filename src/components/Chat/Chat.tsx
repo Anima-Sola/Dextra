@@ -2,8 +2,10 @@ import ChatTopBar from "@/components/TopBars/ChatTopBar";
 import fontSizes from "@/constants/fontSizes";
 import { ITheme } from "@/constants/interfaces";
 import { MessageType } from "@/constants/types";
+import { useChatSocket } from "@/hooks/useChatSocket";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useChatsStore } from "@/store/chatsStore";
+import { useUserStore } from "@/store/userStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Alert, Image, Platform, StyleSheet, Text, View } from "react-native";
 import {
@@ -12,7 +14,6 @@ import {
   InputToolbar,
   Send,
 } from "react-native-gifted-chat";
-
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type ChatProps = {
@@ -30,7 +31,15 @@ const Chat = ({ onMenuPress, isInteractionDisabled }: ChatProps) => {
     addChat,
     setCurrentChatIndex,
   } = useChatsStore();
+  const { userId } = useUserStore();
   const messages = chats[currentChatIndex]?.messages ?? [];
+  const { isConnected, sendMessage } = useChatSocket();
+
+  const updateMessages = (newMessages: MessageType[]) => {
+    updateCurrentChatMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, newMessages),
+    );
+  };
 
   const onSend = (newMessages: MessageType[]) => {
     if (!chats[currentChatIndex]) {
@@ -38,9 +47,11 @@ const Chat = ({ onMenuPress, isInteractionDisabled }: ChatProps) => {
       setCurrentChatIndex(chats.length);
     }
 
-    updateCurrentChatMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, newMessages),
-    );
+    if (isConnected) {
+      sendMessage(newMessages[0]);
+    } else {
+      Alert.alert("Нет подключения к серверу.");
+    }
   };
 
   const openNewChat = () => {
@@ -70,7 +81,7 @@ const Chat = ({ onMenuPress, isInteractionDisabled }: ChatProps) => {
           keyboardVerticalOffset: insets.bottom + 45,
         }}
         user={{
-          _id: 1,
+          _id: userId,
         }}
         renderDay={() => null}
         renderTime={() => null}

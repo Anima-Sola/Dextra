@@ -1,12 +1,18 @@
 export type MessageType = {
-  _id: number;
+  _id: string;
   text: string;
   createdAt: Date;
   user: {
-    _id: number;
-    name: string;
-    avatar: string | number;
+    _id: string;
+    name?: string;
+    avatar?: string;
   };
+};
+
+export type MessageReceivedType = {
+  _id: string;
+  status: "delivered";
+  deliveredAt: Date;
 };
 
 export type ChatType = {

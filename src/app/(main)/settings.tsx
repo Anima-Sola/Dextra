@@ -5,6 +5,7 @@ import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useSettingsStore } from "@/store/settingsStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import fontSizes from "../../constants/fontSizes";
 
 const themeOptions = [
   { mode: "system", label: "Система", icon: "phone-portrait-outline" },
@@ -23,7 +24,7 @@ export default function SettingsScreen() {
         <TopBar title="Настройки" />
         <Text style={styles.sectionTitle}>Внешний вид</Text>
         <View style={styles.optionList}>
-          {themeOptions.map((option, index) => {
+          {themeOptions.map((option, key) => {
             const isSelected = mode === option.mode;
 
             return (
@@ -34,7 +35,7 @@ export default function SettingsScreen() {
                 onPress={() => setMode(option.mode)}
                 style={({ pressed }) => [
                   styles.optionRow,
-                  index < themeOptions.length - 1 && styles.optionDivider,
+                  key < themeOptions.length - 1 && styles.optionDivider,
                   pressed && styles.optionPressed,
                 ]}
               >
@@ -76,7 +77,7 @@ const createStyles = (theme: ITheme) =>
     },
     sectionTitle: {
       color: theme.colors.textSecondary,
-      fontSize: 14,
+      fontSize: fontSizes.FONT14,
       fontFamily: "ComfortaaSemiBold",
       paddingHorizontal: 16,
       paddingBottom: 8,
@@ -99,7 +100,7 @@ const createStyles = (theme: ITheme) =>
     },
     settingLabel: {
       color: theme.colors.text,
-      fontSize: 16,
+      fontSize: fontSizes.FONT16,
       fontFamily: "ComfortaaRegular",
     },
     iconColor: {

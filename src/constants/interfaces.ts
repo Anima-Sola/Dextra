@@ -22,6 +22,7 @@ export interface IChatsSlice {
 }
 
 export interface IUserSlice {
+  userId: string;
   name: string;
   avatar: ImageSourcePropType | undefined;
   email: string;
