@@ -69,9 +69,9 @@ const createStyles = (theme: ITheme) =>
     },
     container: {
       flex: 1,
+      paddingHorizontal: 16,
     },
     optionList: {
-      marginHorizontal: 16,
       borderRadius: 12,
       overflow: "hidden",
     },
@@ -79,7 +79,6 @@ const createStyles = (theme: ITheme) =>
       color: theme.colors.textSecondary,
       fontSize: fontSizes.FONT14,
       fontFamily: "ComfortaaSemiBold",
-      paddingHorizontal: 16,
       paddingBottom: 8,
       paddingTop: 16,
     },

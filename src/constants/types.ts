@@ -9,11 +9,19 @@ export type MessageType = {
   };
 };
 
-export type MessageReceivedType = {
+export type MessageDeliveredType = {
   _id: string;
   status: "delivered";
   deliveredAt: Date;
 };
+
+export type onMessageEventType = (message: MessageType) => void;
+export type onMessageDeliveredStatusEventType = (
+  message: MessageDeliveredType,
+) => void;
+export type onMessageErrorEventType = (error: { message: string }) => void;
+export type onConnectEventType = () => void;
+export type onDisconnectEventType = () => void;
 
 export type ChatType = {
   title: string;

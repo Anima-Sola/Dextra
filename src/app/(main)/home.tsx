@@ -1,144 +1,107 @@
-import Chat from "@/components/Chat/Chat";
-import SideBar from "@/components/SideBar/SideBar";
+import AskBar from "@/components/AskBar/AskBar";
+import QuickActions from "@/components/QuickActions/QuickActions";
+import RecentActions from "@/components/RecentActions/RecentActions";
+import HomeTopBar from "@/components/TopBars/HomeTopBar";
 import Wrapper from "@/components/Wrapper/Wrapper";
-import { useTheme } from "@/hooks/useTheme";
-import { useEffect, useState } from "react";
+import fontSizes from "@/constants/fontSizes";
+import { ITheme } from "@/constants/interfaces";
+import { useThemedStyles } from "@/hooks/useThemedStyles";
+import { useRouter } from "expo-router";
 import {
-  Keyboard,
-  Pressable,
+  ScrollView,
   StyleSheet,
-  useWindowDimensions,
+  Text,
+  TouchableOpacity,
   View,
 } from "react-native";
-import { GestureDetector, usePanGesture } from "react-native-gesture-handler";
-import Animated, {
-  interpolate,
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { scheduleOnRN } from "react-native-worklets";
 
 export default function HomeScreen() {
-  const { width } = useWindowDimensions();
-  const theme = useTheme();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isOpenAnimationComplete, setIsOpenAnimationComplete] = useState(false);
-  const drawerProgress = useSharedValue(0);
-  const sidebarWidth = width * 0.8;
-
-  useEffect(() => {
-    drawerProgress.value = withTiming(
-      isSidebarOpen ? 1 : 0,
-      {
-        duration: 280,
-      },
-      (finished) => {
-        if (finished) {
-          scheduleOnRN(setIsOpenAnimationComplete, isSidebarOpen);
-        }
-      },
-    );
-  }, [drawerProgress, isSidebarOpen, setIsOpenAnimationComplete]);
-
-  const toggleSidebar = () => {
-    Keyboard.dismiss();
-    setIsOpenAnimationComplete(false);
-    setIsSidebarOpen((isOpen) => !isOpen);
-  };
-
-  const panGesture = usePanGesture({
-    activeOffsetX: [-20, 20],
-    failOffsetY: [-15, 15],
-    runOnJS: true,
-    onDeactivate: ({ canceled, translationX }) => {
-      if (
-        !canceled &&
-        ((!isSidebarOpen && translationX > 60) ||
-          (isSidebarOpen && translationX < -60))
-      ) {
-        toggleSidebar();
-      }
-    },
-  });
-
-  const sidebarStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: interpolate(
-          drawerProgress.value,
-          [0, 1],
-          [-sidebarWidth, 0],
-        ),
-      },
-    ],
-  }));
-
-  const chatStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      drawerProgress.value,
-      [0, 1],
-      [theme.colors.background, theme.colors.backgroundElement],
-    ),
-    transform: [
-      {
-        translateX: interpolate(
-          drawerProgress.value,
-          [0, 1],
-          [0, sidebarWidth],
-        ),
-      },
-      {
-        scaleY: interpolate(drawerProgress.value, [0, 1], [1, 0.96]),
-      },
-    ],
-  }));
+  const styles = useThemedStyles(createStyles);
+  const router = useRouter();
 
   return (
-    <Wrapper>
-      <GestureDetector gesture={panGesture}>
-        <View style={styles.container}>
-          <Animated.View
-            pointerEvents={isSidebarOpen ? "box-none" : "none"}
-            style={[styles.fill, sidebarStyle]}
-          >
-            <SideBar onChatSelect={toggleSidebar} />
-          </Animated.View>
-          <Animated.View style={[styles.chat, chatStyle]}>
-            <Chat
-              onMenuPress={toggleSidebar}
-              isInteractionDisabled={isSidebarOpen}
-            />
-            {isSidebarOpen && isOpenAnimationComplete && (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Close menu"
-                onPress={toggleSidebar}
-                style={styles.fill}
-              />
-            )}
-          </Animated.View>
-        </View>
-      </GestureDetector>
+    <Wrapper backgroundColor={styles.wrapper.backgroundColor}>
+      <View style={styles.container}>
+        <HomeTopBar />
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.greetingText}>
+            Привет!👋 Чем займемся сегодня?
+          </Text>
+
+          <AskBar />
+
+          <View style={styles.quickActionsHeader}>
+            <Text style={styles.quickActionsHeaderText}>Быстрые действия</Text>
+            <TouchableOpacity onPress={() => router.push("/quickActions")}>
+              <Text style={styles.seeAll}>Все действия →</Text>
+            </TouchableOpacity>
+          </View>
+
+          <QuickActions />
+
+          <View style={styles.recentActionsHeading}>
+            <Text style={styles.recentActionsHeadingText}>
+              Последняя активность
+            </Text>
+            <TouchableOpacity>
+              <Text style={styles.seeAll}>Все действия →</Text>
+            </TouchableOpacity>
+          </View>
+
+          <RecentActions />
+        </ScrollView>
+      </View>
     </Wrapper>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    overflow: "hidden",
-  },
-  fill: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  },
-  chat: {
-    flex: 1,
-    borderRadius: 16,
-  },
-});
+const createStyles = (theme: ITheme) =>
+  StyleSheet.create({
+    wrapper: {
+      backgroundColor: theme.colors1.mainBackground,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors1.mainBackground,
+    },
+    content: {
+      paddingHorizontal: 16,
+      paddingTop: 10,
+      paddingBottom: 20,
+    },
+    greetingText: {
+      color: theme.colors1.mainText,
+      fontSize: fontSizes.FONT18,
+      marginBottom: 10,
+      fontWeight: "500",
+    },
+    quickActionsHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginVertical: 10,
+    },
+    quickActionsHeaderText: {
+      color: theme.colors1.mainText,
+      fontSize: fontSizes.FONT16,
+    },
+    recentActionsHeading: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginTop: 30,
+      marginBottom: 10,
+    },
+    recentActionsHeadingText: {
+      color: theme.colors1.mainText,
+      fontSize: fontSizes.FONT16,
+    },
+    seeAll: {
+      color: theme.colors1.accent,
+      fontSize: 12,
+      fontWeight: "600",
+    },
+  });

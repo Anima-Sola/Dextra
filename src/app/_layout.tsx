@@ -7,7 +7,7 @@ import { useColorScheme } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
+export default function MainLayout() {
   const { setResolvedTheme, mode } = useSettingsStore();
   const [isFontsLoaded, setIsFontsLoaded] = useState(false);
   const systemColorScheme = useColorScheme();
@@ -52,6 +52,8 @@ export default function TabLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(main)/home" />
+      <Stack.Screen name="(main)/quickActions" />
+      <Stack.Screen name="(main)/chat" />
       <Stack.Screen name="(main)/settings" />
     </Stack>
   );

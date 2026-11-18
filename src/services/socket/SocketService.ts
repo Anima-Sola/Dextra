@@ -1,16 +1,23 @@
-import { MessageReceivedType, MessageType } from "@/constants/types";
+import {
+  MessageDeliveredType,
+  MessageType,
+  onConnectEventType,
+  onDisconnectEventType,
+  onMessageDeliveredStatusEventType,
+  onMessageErrorEventType,
+  onMessageEventType,
+} from "@/constants/types";
 import { io, Socket } from "socket.io-client";
 
 class SocketService {
   private socket: Socket | null = null;
   private connectionUrl: string | null = null;
-  private messageListeners = new Set<(message: MessageType) => void>();
-  private messageDeliveredListeners = new Set<
-    (message: MessageReceivedType) => void
-  >();
-  private errorListeners = new Set<(error: { message: string }) => void>();
-  private connectListeners = new Set<() => void>();
-  private disconnectListeners = new Set<() => void>();
+  private messageListeners = new Set<onMessageEventType>();
+  private messageDeliveredListeners =
+    new Set<onMessageDeliveredStatusEventType>();
+  private errorListeners = new Set<onMessageErrorEventType>();
+  private connectListeners = new Set<onConnectEventType>();
+  private disconnectListeners = new Set<onDisconnectEventType>();
 
   connect(url: string): void {
     if (this.socket?.active && this.connectionUrl === url) {
@@ -31,7 +38,7 @@ class SocketService {
       this.messageListeners.forEach((callback) => callback(message));
     });
 
-    socket.on("message:delivered", (message: MessageReceivedType) => {
+    socket.on("message:delivered", (message: MessageDeliveredType) => {
       this.messageDeliveredListeners.forEach((callback) => callback(message));
     });
 
@@ -69,46 +76,46 @@ class SocketService {
     this.socket.emit("message", message);
   }
 
-  onMessage(callback: (message: MessageType) => void): void {
+  onMessage(callback: onMessageEventType): void {
     this.messageListeners.add(callback);
   }
 
-  offMessage(callback: (message: MessageType) => void): void {
+  offMessage(callback: onMessageEventType): void {
     this.messageListeners.delete(callback);
   }
 
-  onMessageDelivered(callback: (message: MessageReceivedType) => void): void {
+  onMessageDelivered(callback: onMessageDeliveredStatusEventType): void {
     this.messageDeliveredListeners.add(callback);
   }
 
-  offMessageDelivered(callback: (message: MessageReceivedType) => void): void {
+  offMessageDelivered(callback: onMessageDeliveredStatusEventType): void {
     this.messageDeliveredListeners.delete(callback);
   }
 
-  onError(callback: (error: { message: string }) => void): void {
+  onError(callback: onMessageErrorEventType): void {
     this.errorListeners.add(callback);
   }
 
-  offError(callback: (error: { message: string }) => void): void {
+  offError(callback: onMessageErrorEventType): void {
     this.errorListeners.delete(callback);
   }
 
-  onConnect(callback: () => void): void {
+  onConnect(callback: onConnectEventType): void {
     this.connectListeners.add(callback);
     if (this.isConnected) {
       callback();
     }
   }
 
-  offConnect(callback: () => void): void {
+  offConnect(callback: onConnectEventType): void {
     this.connectListeners.delete(callback);
   }
 
-  onDisconnect(callback: () => void): void {
+  onDisconnect(callback: onDisconnectEventType): void {
     this.disconnectListeners.add(callback);
   }
 
-  offDisconnect(callback: () => void): void {
+  offDisconnect(callback: onDisconnectEventType): void {
     this.disconnectListeners.delete(callback);
   }
 

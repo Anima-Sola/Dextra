@@ -1,12 +1,12 @@
 import ChatTopBar from "@/components/TopBars/ChatTopBar";
 import fontSizes from "@/constants/fontSizes";
 import { ITheme } from "@/constants/interfaces";
-import { MessageType } from "@/constants/types";
-import { useChatSocket } from "@/hooks/useChatSocket";
+import { MessageDeliveredType, MessageType } from "@/constants/types";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useChatsStore } from "@/store/chatsStore";
 import { useUserStore } from "@/store/userStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useCallback, useState } from "react";
 import { Alert, Image, Platform, StyleSheet, Text, View } from "react-native";
 import {
   Bubble,
@@ -33,13 +33,41 @@ const Chat = ({ onMenuPress, isInteractionDisabled }: ChatProps) => {
   } = useChatsStore();
   const { userId } = useUserStore();
   const messages = chats[currentChatIndex]?.messages ?? [];
-  const { isConnected, sendMessage } = useChatSocket();
+  const [messageDeliveredStatus, setMessageDeliveredStatus] = useState<
+    string | null
+  >(null);
 
-  const updateMessages = (newMessages: MessageType[]) => {
-    updateCurrentChatMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, newMessages),
-    );
-  };
+  const updateMessages = useCallback(
+    (newMessages: MessageType[]) => {
+      updateCurrentChatMessages((previousMessages) =>
+        GiftedChat.append(previousMessages, newMessages),
+      );
+    },
+    [updateCurrentChatMessages],
+  );
+
+  const handleMessage = useCallback(
+    (message: MessageType) => {
+      console.log("Received message:", message);
+      if (messageDeliveredStatus === "delivered") {
+        updateMessages([message]);
+        setMessageDeliveredStatus(null);
+      }
+    },
+    [updateMessages, messageDeliveredStatus],
+  );
+
+  const handleMessageDeliveredStatus = useCallback(
+    (deliveredStatus: MessageDeliveredType) => {
+      setMessageDeliveredStatus(deliveredStatus.status);
+    },
+    [updateCurrentChatMessages],
+  );
+
+  /*const { isConnected, sendMessage } = useChatSocket(
+    handleMessage,
+    handleMessageDeliveredStatus,
+  );*/
 
   const onSend = (newMessages: MessageType[]) => {
     if (!chats[currentChatIndex]) {
@@ -47,11 +75,12 @@ const Chat = ({ onMenuPress, isInteractionDisabled }: ChatProps) => {
       setCurrentChatIndex(chats.length);
     }
 
-    if (isConnected) {
+    /*if (isConnected) {
+      updateMessages([newMessages[0]]);
       sendMessage(newMessages[0]);
-    } else {
-      Alert.alert("Нет подключения к серверу.");
-    }
+    } else {*/
+    Alert.alert("Нет подключения к серверу.");
+    //}
   };
 
   const openNewChat = () => {
