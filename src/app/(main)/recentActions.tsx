@@ -19,7 +19,7 @@ export default function RecentActionScreen() {
   return (
     <Wrapper backgroundColor={styles.wrapper.backgroundColor}>
       <View style={styles.container}>
-        <TopBar />
+        <TopBar title={"Последняя активность"} />
         <View style={styles.searchBar}>
           <TextInput
             placeholder="Название активности..."

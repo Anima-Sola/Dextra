@@ -19,7 +19,7 @@ export default function QuickActionScreen() {
   return (
     <Wrapper backgroundColor={styles.wrapper.backgroundColor}>
       <View style={styles.container}>
-        <TopBar />
+        <TopBar title="Быстрые действия" />
         <View style={styles.searchBar}>
           <TextInput
             placeholder="Название активности..."

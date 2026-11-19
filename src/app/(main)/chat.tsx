@@ -176,7 +176,7 @@ const createStyles = (theme: ITheme) =>
       paddingHorizontal: 16,
     },
     header: {
-      height: 76,
+      height: 65,
       flexDirection: "row",
       alignItems: "center",
       borderBottomWidth: StyleSheet.hairlineWidth,
@@ -185,6 +185,24 @@ const createStyles = (theme: ITheme) =>
     headerTitle: {
       flex: 1,
       paddingLeft: 10,
+    },
+    iconButton: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: theme.colors1.secondaryBackground,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: theme.colors1.border,
+      shadowColor: theme.colors1.shadow,
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      elevation: 2,
     },
     agentName: {
       color: theme.colors1.mainText,
@@ -289,25 +307,6 @@ const createStyles = (theme: ITheme) =>
     },
 
     ///
-
-    iconButton: {
-      width: 34,
-      height: 34,
-      borderRadius: 17,
-      backgroundColor: theme.colors1.secondaryBackground,
-      alignItems: "center",
-      justifyContent: "center",
-      borderWidth: 1,
-      borderColor: theme.colors1.border,
-      shadowColor: theme.colors1.shadow,
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      shadowOffset: {
-        width: 0,
-        height: 3,
-      },
-      elevation: 2,
-    },
 
     backButton: { width: 42, justifyContent: "center" },
     back: { color: INK, fontSize: 32, lineHeight: 34 },
