@@ -48,6 +48,16 @@ const createStyles = (theme: ITheme) =>
       borderRadius: 15,
       padding: 12,
       justifyContent: "space-between",
+      borderWidth: 1,
+      borderColor: theme.colors1.border,
+      shadowColor: theme.colors1.shadow,
+      shadowOpacity: 0.06,
+      shadowRadius: 7,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      elevation: 1,
     },
     actionBottom: {
       flexDirection: "row",

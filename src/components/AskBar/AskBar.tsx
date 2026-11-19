@@ -1,19 +1,16 @@
 import fontSizes from "@/constants/fontSizes";
 import { ITheme } from "@/constants/interfaces";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
-import { useSettingsStore } from "@/store/settingsStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
 export default function AskBar() {
   const styles = useThemedStyles(createStyles);
   const router = useRouter();
-  const { appIcon } = useSettingsStore();
 
   return (
     <Pressable style={styles.askBar} onPress={() => router.push("/chat")}>
-      <Text style={styles.askSpark}>{appIcon}</Text>
       <TextInput
         placeholder="Спросите меня о чем-нибудь..."
         placeholderTextColor={styles.placeholderText.color}
@@ -54,10 +51,6 @@ const createStyles = (theme: ITheme) =>
       },
       elevation: 2,
     },
-    askSpark: {
-      fontSize: fontSizes.FONT20,
-      color: theme.colors1.accent,
-    },
     askInput: {
       flex: 1,
       height: 44,
@@ -71,10 +64,6 @@ const createStyles = (theme: ITheme) =>
       backgroundColor: theme.colors1.accent,
       alignItems: "center",
       justifyContent: "center",
-    },
-    sendArrow: {
-      color: theme.colors1.secondaryBackground,
-      fontSize: fontSizes.FONT20,
     },
     placeholderText: {
       color: theme.colors1.placholderText,

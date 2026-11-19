@@ -4,6 +4,7 @@ const fontScale = PixelRatio.getFontScale();
 
 const fontSizes = {
   FONT10: 10 / fontScale,
+  FONT11: 11 / fontScale,
   FONT12: 12 / fontScale,
   FONT13: 13 / fontScale,
   FONT14: 14 / fontScale,

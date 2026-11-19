@@ -33,5 +33,11 @@ export const useQuickActionsStore = create<IQuickActionsSlice>(() => ({
       titleDown: "интернете",
       colorIndex: 0,
     },
+    {
+      iconName: "infinity",
+      titleUp: "Все",
+      titleDown: "действия",
+      colorIndex: 1,
+    },
   ],
 }));

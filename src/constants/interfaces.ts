@@ -51,6 +51,7 @@ export interface ITheme {
     placholderText: string;
     actionCardBackgroundColors: string[];
     actionCardArrowColors: string[];
+    onlineDot: string;
   };
 }
 

@@ -46,7 +46,7 @@ export default function HomeScreen() {
             <Text style={styles.recentActionsHeadingText}>
               Последняя активность
             </Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push("/recentActions")}>
               <Text style={styles.seeAll}>Все действия →</Text>
             </TouchableOpacity>
           </View>

@@ -25,9 +25,9 @@ export default function RecentActionCard({
   return (
     <TouchableOpacity style={[styles.activityCard, { backgroundColor }]}>
       <MaterialCommunityIcons name={iconName} size={24} color={arrowColor} />
-      <View style={styles.activityCopy}>
-        <Text style={styles.activityTitle}>{title}</Text>
-        <Text style={styles.activityDetail}>{details}</Text>
+      <View style={styles.action}>
+        <Text style={styles.actionTitle}>{title}</Text>
+        <Text style={styles.actionDetails}>{details}</Text>
       </View>
       <Text style={[styles.chevron, , { color: arrowColor }]}>➜</Text>
     </TouchableOpacity>
@@ -44,6 +44,7 @@ const createStyles = (theme: ITheme) =>
       borderWidth: 1,
       borderColor: theme.colors1.border,
       flexDirection: "row",
+      justifyContent: "center",
       alignItems: "center",
       shadowColor: theme.colors1.shadow,
       shadowOpacity: 0.06,
@@ -54,18 +55,18 @@ const createStyles = (theme: ITheme) =>
       },
       elevation: 1,
     },
-    activityCopy: {
+    action: {
       flex: 1,
       marginLeft: 10,
     },
-    activityTitle: {
+    actionTitle: {
       color: theme.colors1.mainText,
-      fontSize: fontSizes.FONT12,
+      fontSize: fontSizes.FONT13,
       fontFamily: "ComfortaaBold",
     },
-    activityDetail: {
+    actionDetails: {
       color: theme.colors1.secondaryText,
-      fontSize: fontSizes.FONT10,
+      fontSize: fontSizes.FONT12,
       marginTop: 3,
     },
     chevron: {

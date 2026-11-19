@@ -53,6 +53,7 @@ export default function MainLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(main)/home" />
       <Stack.Screen name="(main)/quickActions" />
+      <Stack.Screen name="(main)/recentActions" />
       <Stack.Screen name="(main)/chat" />
       <Stack.Screen name="(main)/settings" />
     </Stack>
