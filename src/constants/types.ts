@@ -1,16 +1,19 @@
 export type MessageType = {
-  _id: string;
-  text: string;
+  id: string;
+  type: "income" | "outgoing";
+  content: string;
   createdAt: Date;
-  user: {
-    _id: string;
-    name?: string;
-    avatar?: string;
-  };
+  userId: string;
+};
+
+export type ChatType = {
+  id: string;
+  title: string;
+  messages: MessageType[];
 };
 
 export type MessageDeliveredType = {
-  _id: string;
+  id: string;
   status: "delivered";
   deliveredAt: Date;
 };
@@ -22,8 +25,3 @@ export type onMessageDeliveredStatusEventType = (
 export type onMessageErrorEventType = (error: { message: string }) => void;
 export type onConnectEventType = () => void;
 export type onDisconnectEventType = () => void;
-
-export type ChatType = {
-  title: string;
-  messages: Array<MessageType>;
-};

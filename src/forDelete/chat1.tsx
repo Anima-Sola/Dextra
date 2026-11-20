@@ -1,6 +1,6 @@
-import Chat from "@/components/Chat/Chat";
-import SideBar from "@/components/SideBar/SideBar";
 import Wrapper from "@/components/Wrapper/Wrapper";
+import Chat from "@/forDelete/Chat/Chat";
+import SideBar from "@/forDelete/SideBar/SideBar";
 import { useTheme } from "@/hooks/useTheme";
 import { useEffect, useState } from "react";
 import {

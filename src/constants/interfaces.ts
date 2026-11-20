@@ -13,16 +13,8 @@ export interface ISettingsSlice {
 }
 
 export interface IChatsSlice {
-  currentChatIndex: number;
-  chats: Array<ChatType>;
-  setCurrentChatIndex: (index: number) => void;
-  deleteChat: (index: number) => void;
-  clearChatMessages: (index: number) => void;
-  addChat: (title: string) => void;
-  updateChatTitle: (index: number, title: string) => void;
-  updateCurrentChatMessages: (
-    updateMessages: (messages: MessageType[]) => MessageType[],
-  ) => void;
+  chats: ChatType[];
+  addChatMessage: (chatId: string, message: MessageType) => void;
 }
 
 export interface IUserSlice {
@@ -52,6 +44,7 @@ export interface ITheme {
     actionCardBackgroundColors: string[];
     actionCardArrowColors: string[];
     onlineDot: string;
+    messageBackgoundColor: string;
   };
 }
 

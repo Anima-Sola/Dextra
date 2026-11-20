@@ -27,6 +27,8 @@ export const lightTheme = {
     actionCardArrowColors: ["#F56B35", "#2785F5", "#8C56F4", "#34B888"],
 
     onlineDot: "#49C987",
+
+    messageBackgoundColor: "#EAE7FF",
   },
 };
 
@@ -58,6 +60,8 @@ export const darkTheme = {
     actionCardArrowColors: ["#F56B35", "#2785F5", "#8C56F4", "#34B888"],
 
     onlineDot: "#49C987",
+
+    messageBackgoundColor: "#302D4A",
   },
 };
 

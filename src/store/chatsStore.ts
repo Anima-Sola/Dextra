@@ -2,6 +2,45 @@ import { IChatsSlice } from "@/constants/interfaces";
 import { create } from "zustand";
 
 export const useChatsStore = create<IChatsSlice>((set) => ({
+  chats: [
+    {
+      id: "asd",
+      title: "Бронирование столика",
+      messages: [
+        {
+          id: "sdf",
+          type: "outgoing",
+          content: "Закажи мне столик на двоих в ресторане на завтра на 19.00",
+          createdAt: new Date(),
+          userId: "user",
+        },
+        {
+          id: "ggg",
+          type: "income",
+          content: "Забронирован столик в ресторане СенЖак на завтра на 19.00",
+          createdAt: new Date(),
+          userId: "ai",
+        },
+      ],
+    },
+  ],
+  addChatMessage: (chatId, message) =>
+    set((state) => {
+      if (!state.chats.some((chat) => chat.id === chatId)) {
+        return state;
+      }
+
+      return {
+        chats: state.chats.map((chat) =>
+          chat.id === chatId
+            ? { ...chat, messages: [...chat.messages, message] }
+            : chat,
+        ),
+      };
+    }),
+}));
+
+/*export const useChatsStore = create<IChatsSlice>((set) => ({
   currentChatIndex: 0,
   chats: [],
   setCurrentChatIndex: (index) => set({ currentChatIndex: index }),
@@ -21,7 +60,7 @@ export const useChatsStore = create<IChatsSlice>((set) => ({
     }),
   addChat: (title) =>
     set((state) => ({
-      chats: [...state.chats, { title, messages: [] }],
+      chats: [...state.chats, { id, title, messages: [] }],
     })),
   updateChatTitle: (index, title) =>
     set((state) => ({
@@ -37,7 +76,7 @@ export const useChatsStore = create<IChatsSlice>((set) => ({
           : chat,
       ),
     })),
-}));
+}));*/
 
 /*
 chats: [

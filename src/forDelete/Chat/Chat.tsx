@@ -1,7 +1,7 @@
-import ChatTopBar from "@/components/TopBars/ChatTopBar";
 import fontSizes from "@/constants/fontSizes";
 import { ITheme } from "@/constants/interfaces";
 import { MessageDeliveredType, MessageType } from "@/constants/types";
+import ChatTopBar from "@/forDelete/ChatTopBar";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useChatsStore } from "@/store/chatsStore";
 import { useUserStore } from "@/store/userStore";

@@ -2,8 +2,8 @@ import Feather from "@expo/vector-icons/Feather";
 import SimpleLineIcons from "@expo/vector-icons/SimpleLineIcons";
 import { FC } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ITheme } from "../../constants/interfaces";
-import { useThemedStyles } from "../../hooks/useThemedStyles";
+import { ITheme } from "../constants/interfaces";
+import { useThemedStyles } from "../hooks/useThemedStyles";
 
 type ChatTopBarProps = {
   onMenuPress: () => void;
