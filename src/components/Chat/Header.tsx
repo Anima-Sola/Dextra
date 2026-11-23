@@ -15,7 +15,11 @@ export default function ChatHeader({ onBackPress }: ChatType) {
 
   return (
     <View style={styles.header}>
-      <TouchableOpacity style={styles.iconButton} onPress={onBackPress}>
+      <TouchableOpacity
+        style={styles.iconButton}
+        onPress={onBackPress}
+        activeOpacity={0.8}
+      >
         <MaterialCommunityIcons
           name="chevron-left"
           size={24}
@@ -28,7 +32,7 @@ export default function ChatHeader({ onBackPress }: ChatType) {
           <Text style={styles.onlineDot}>● </Text>Online
         </Text>
       </View>
-      <TouchableOpacity style={styles.moreButton}>
+      <TouchableOpacity style={styles.moreButton} activeOpacity={0.8}>
         <Text style={styles.more}>···</Text>
       </TouchableOpacity>
     </View>

@@ -3,13 +3,7 @@ import { ITheme } from "@/constants/interfaces";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useUserStore } from "@/store/userStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import {
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ProfileCard() {
   const styles = useThemedStyles(createStyles);
@@ -38,12 +32,22 @@ const createStyles = (theme: ITheme) =>
     profileCard: {
       height: 78,
       marginTop: 1,
-      marginBottom: 27,
-      paddingHorizontal: 15,
+      marginBottom: 10,
+      paddingHorizontal: 11,
       borderRadius: 25,
       backgroundColor: theme.colors1.secondaryBackground,
       flexDirection: "row",
       alignItems: "center",
+      borderWidth: 1,
+      borderColor: theme.colors1.border,
+      shadowColor: theme.colors1.shadow,
+      shadowOpacity: 0.06,
+      shadowRadius: 7,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      elevation: 1,
     },
     avatar: {
       borderRadius: 28,
@@ -70,6 +74,6 @@ const createStyles = (theme: ITheme) =>
       fontFamily: "ComfortaaBold",
     },
     iconColor: {
-      color: theme.colors.text,
+      color: theme.colors1.mainText,
     },
   });

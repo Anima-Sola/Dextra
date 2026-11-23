@@ -15,10 +15,10 @@ const ChatTopBar: FC<ChatTopBarProps> = ({ onMenuPress, onAddPress }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onMenuPress}>
+      <TouchableOpacity onPress={onMenuPress} activeOpacity={0.8}>
         <SimpleLineIcons name="menu" size={26} color={styles.iconColor.color} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={onAddPress}>
+      <TouchableOpacity onPress={onAddPress} activeOpacity={0.8}>
         <Feather name="plus-circle" size={32} color={styles.iconColor.color} />
       </TouchableOpacity>
     </View>

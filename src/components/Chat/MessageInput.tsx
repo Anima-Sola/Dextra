@@ -20,7 +20,7 @@ export default function MessageInput({
 
   return (
     <View style={styles.askBar}>
-      <TouchableOpacity style={styles.attach}>
+      <TouchableOpacity style={styles.attach} activeOpacity={0.8}>
         <Ionicons name="attach" size={24} color={styles.clipIconColor.color} />
       </TouchableOpacity>
       <TextInput
@@ -34,6 +34,7 @@ export default function MessageInput({
         style={styles.sendButton}
         onPress={onMessage}
         disabled={text === ""}
+        activeOpacity={0.8}
       >
         <MaterialCommunityIcons
           name="chevron-right"

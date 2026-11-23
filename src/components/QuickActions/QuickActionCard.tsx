@@ -28,7 +28,10 @@ export default function QuickActionsCard({
     orientation === "horizontal" ? (screenWidth * 43) / 100 : "48.5%";
 
   return (
-    <TouchableOpacity style={[styles.actionCard, { backgroundColor, width }]}>
+    <TouchableOpacity
+      style={[styles.actionCard, { backgroundColor, width }]}
+      activeOpacity={0.8}
+    >
       <MaterialCommunityIcons name={iconName} size={24} color={arrowColor} />
       <View style={styles.actionBottom}>
         <View>

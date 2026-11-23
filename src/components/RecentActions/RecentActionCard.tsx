@@ -23,7 +23,10 @@ export default function RecentActionCard({
   const styles = useThemedStyles(createStyles);
 
   return (
-    <TouchableOpacity style={[styles.activityCard, { backgroundColor }]}>
+    <TouchableOpacity
+      style={[styles.activityCard, { backgroundColor }]}
+      activeOpacity={0.8}
+    >
       <MaterialCommunityIcons name={iconName} size={24} color={arrowColor} />
       <View style={styles.action}>
         <Text style={styles.actionTitle}>{title}</Text>

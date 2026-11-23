@@ -5,7 +5,7 @@ import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useSettingsStore } from "@/store/settingsStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import fontSizes from "../../constants/fontSizes";
+import fontSizes from "../constants/fontSizes";
 
 const themeOptions = [
   { mode: "system", label: "Система", icon: "phone-portrait-outline" },

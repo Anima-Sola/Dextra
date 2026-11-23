@@ -16,7 +16,11 @@ const TopBar: FC<TopBarProps> = ({ title = "" }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.iconButton} onPress={() => router.back()}>
+      <TouchableOpacity
+        style={styles.iconButton}
+        onPress={() => router.back()}
+        activeOpacity={0.8}
+      >
         <MaterialCommunityIcons
           name="chevron-left"
           size={24}

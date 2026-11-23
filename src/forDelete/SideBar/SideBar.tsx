@@ -72,7 +72,10 @@ const SideBar = ({ onChatSelect }: SideBarProps) => {
             >
               <Text style={chatTitleStyle}>{chat.title}</Text>
               {key === currentChatIndex && (
-                <TouchableOpacity onPress={() => deleteChatById(key)}>
+                <TouchableOpacity
+                  onPress={() => deleteChatById(key)}
+                  activeOpacity={0.8}
+                >
                   <Feather
                     name="trash-2"
                     size={22}

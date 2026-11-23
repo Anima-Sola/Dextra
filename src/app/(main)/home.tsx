@@ -35,7 +35,10 @@ export default function HomeScreen() {
 
           <View style={styles.quickActionsHeader}>
             <Text style={styles.quickActionsHeaderText}>Быстрые действия</Text>
-            <TouchableOpacity onPress={() => router.push("/quickActions")}>
+            <TouchableOpacity
+              onPress={() => router.push("/quickActions")}
+              activeOpacity={0.8}
+            >
               <Text style={styles.seeAll}>Все действия →</Text>
             </TouchableOpacity>
           </View>
@@ -46,7 +49,10 @@ export default function HomeScreen() {
             <Text style={styles.recentActionsHeadingText}>
               Последняя активность
             </Text>
-            <TouchableOpacity onPress={() => router.push("/recentActions")}>
+            <TouchableOpacity
+              onPress={() => router.push("/recentActions")}
+              activeOpacity={0.8}
+            >
               <Text style={styles.seeAll}>Все действия →</Text>
             </TouchableOpacity>
           </View>
