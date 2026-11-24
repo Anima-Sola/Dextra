@@ -5,13 +5,15 @@ import MessageInput from "@/components/Chat/MessageInput";
 import OutgoingMessage from "@/components/Chat/OutgoingMessage";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import { ITheme } from "@/constants/interfaces";
-import { MessageType } from "@/constants/types";
+import { MessageDeliveredType, MessageType } from "@/constants/types";
+import { useChatSocket } from "@/hooks/useChatSocket";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useChatsStore } from "@/store/chatsStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import type { ListRenderItem } from "react-native";
 import {
+  Alert,
   FlatList,
   KeyboardAvoidingView,
   Platform,
@@ -23,29 +25,38 @@ export default function ChatScreen() {
   const { chats, addChatMessage } = useChatsStore();
   const messages = chats.find((chat) => chat.id === "asd")?.messages;
   const router = useRouter();
-  const [text, setText] = useState("");
+  const [messageText, setMessageText] = useState("");
 
-  const handleMessage = () => {
-    const newMessage: MessageType = {
+  const handleMessage = (message: MessageType) => {
+    addChatMessage("asd", message);
+    setMessageText("");
+  };
+
+  const handleMessageDeliveredStatus = (status: MessageDeliveredType) => {
+    console.log(status);
+  };
+
+  const { isConnected, sendMessage } = useChatSocket(
+    handleMessage,
+    handleMessageDeliveredStatus,
+  );
+
+  const onSend = () => {
+    const message: MessageType = {
       id: "sd22f",
       type: "outgoing",
-      content: "Это новое сообщение",
+      content: messageText,
       createdAt: new Date(),
       userId: "user",
     };
 
-    const newMessage2: MessageType = {
-      id: "sd22f1",
-      type: "income",
-      content:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-      createdAt: new Date(),
-      userId: "user",
-    };
-
-    addChatMessage("asd", newMessage);
-    addChatMessage("asd", newMessage2);
-    setText("");
+    if (isConnected) {
+      sendMessage(message);
+      addChatMessage("asd", message);
+      setMessageText("");
+    } else {
+      Alert.alert("Нет подключения к серверу.");
+    }
   };
 
   const renderMessage: ListRenderItem<MessageType> = ({ item }) => {
@@ -74,9 +85,17 @@ export default function ChatScreen() {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ChatHeader onBackPress={() => router.back()} />
+        <ChatHeader
+          onBackPress={() => router.back()}
+          isConnected={isConnected}
+        />
         {messages && messages.length === 0 ? <EmptyChat /> : chat()}
-        <MessageInput text={text} setText={setText} onMessage={handleMessage} />
+        <MessageInput
+          text={messageText}
+          setText={setMessageText}
+          onMessage={onSend}
+          isConnected={isConnected}
+        />
       </KeyboardAvoidingView>
     </Wrapper>
   );

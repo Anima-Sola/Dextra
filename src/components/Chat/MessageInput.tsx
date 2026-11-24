@@ -9,14 +9,20 @@ type MessageInputType = {
   text: string;
   setText: (value: string) => void;
   onMessage: () => void;
+  isConnected: boolean;
 };
 
 export default function MessageInput({
   text,
   setText,
   onMessage,
+  isConnected,
 }: MessageInputType) {
   const styles = useThemedStyles(createStyles);
+  const isSendDisabled = text === "" || !isConnected;
+  const sendButtonStyle = isSendDisabled
+    ? styles.disabledSendButton
+    : styles.sendButton;
 
   return (
     <View style={styles.askBar}>
@@ -31,9 +37,9 @@ export default function MessageInput({
         style={styles.askInput}
       />
       <TouchableOpacity
-        style={styles.sendButton}
+        style={sendButtonStyle}
         onPress={onMessage}
-        disabled={text === ""}
+        disabled={isSendDisabled}
         activeOpacity={0.8}
       >
         <MaterialCommunityIcons
@@ -78,6 +84,14 @@ const createStyles = (theme: ITheme) =>
       height: 34,
       borderRadius: 17,
       backgroundColor: theme.colors1.accent,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    disabledSendButton: {
+      width: 34,
+      height: 34,
+      borderRadius: 17,
+      backgroundColor: theme.colors1.placholderText,
       alignItems: "center",
       justifyContent: "center",
     },

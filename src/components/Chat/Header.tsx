@@ -7,11 +7,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type ChatType = {
   onBackPress: () => void;
+  isConnected: boolean;
 };
 
-export default function ChatHeader({ onBackPress }: ChatType) {
+export default function ChatHeader({ onBackPress, isConnected }: ChatType) {
   const styles = useThemedStyles(createStyles);
   const { appName } = useSettingsStore();
+
+  const connectStatusText = isConnected ? "Online" : "Offline";
+  const dotStyle = isConnected ? styles.onlineDot : styles.offlineDot;
 
   return (
     <View style={styles.header}>
@@ -29,7 +33,8 @@ export default function ChatHeader({ onBackPress }: ChatType) {
       <View style={styles.headerTitle}>
         <Text style={styles.agentName}>{appName}</Text>
         <Text style={styles.online}>
-          <Text style={styles.onlineDot}>● </Text>Online
+          <Text style={dotStyle}>● </Text>
+          {connectStatusText}
         </Text>
       </View>
       <TouchableOpacity style={styles.moreButton} activeOpacity={0.8}>
@@ -82,6 +87,9 @@ const createStyles = (theme: ITheme) =>
     },
     onlineDot: {
       color: theme.colors1.onlineDot,
+    },
+    offlineDot: {
+      color: theme.colors1.secondaryText,
     },
     more: {
       color: theme.colors1.mainText,
