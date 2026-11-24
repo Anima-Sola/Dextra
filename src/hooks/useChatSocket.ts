@@ -1,5 +1,5 @@
 import {
-  MessageDeliveredType,
+  MessageDeliveredStatusType,
   MessageType,
   onMessageDeliveredStatusEventType,
   onMessageEventType,
@@ -19,8 +19,9 @@ export function useChatSocket(
   useEffect(() => {
     const handleMessage = (message: MessageType) => onMessage(message);
 
-    const handleMessageDeliveredStatus = (message: MessageDeliveredType) =>
-      onMessageDeliveredStatus(message);
+    const handleMessageDeliveredStatus = (
+      message: MessageDeliveredStatusType,
+    ) => onMessageDeliveredStatus(message);
 
     const handleConnect = () => setIsConnected(true);
     const handleDisconnect = () => setIsConnected(false);

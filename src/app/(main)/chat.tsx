@@ -5,10 +5,11 @@ import MessageInput from "@/components/Chat/MessageInput";
 import OutgoingMessage from "@/components/Chat/OutgoingMessage";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import { ITheme } from "@/constants/interfaces";
-import { MessageDeliveredType, MessageType } from "@/constants/types";
+import { MessageDeliveredStatusType, MessageType } from "@/constants/types";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
 import { useChatsStore } from "@/store/chatsStore";
+import * as Crypto from "expo-crypto";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import type { ListRenderItem } from "react-native";
@@ -22,8 +23,9 @@ import {
 
 export default function ChatScreen() {
   const styles = useThemedStyles(createStyles);
-  const { chats, addChatMessage } = useChatsStore();
-  const messages = chats.find((chat) => chat.id === "asd")?.messages;
+  const { chats, addChatMessage, updateMessageStatus } = useChatsStore();
+  const currentChat = chats.find((chat) => chat.id === "asd");
+  const messages = currentChat?.messages;
   const router = useRouter();
   const [messageText, setMessageText] = useState("");
 
@@ -32,8 +34,14 @@ export default function ChatScreen() {
     setMessageText("");
   };
 
-  const handleMessageDeliveredStatus = (status: MessageDeliveredType) => {
-    console.log(status);
+  const handleMessageDeliveredStatus = (
+    statusMessage: MessageDeliveredStatusType,
+  ) => {
+    updateMessageStatus(
+      statusMessage.chatId,
+      statusMessage.messageId,
+      statusMessage.status,
+    );
   };
 
   const { isConnected, sendMessage } = useChatSocket(
@@ -43,11 +51,13 @@ export default function ChatScreen() {
 
   const onSend = () => {
     const message: MessageType = {
-      id: "sd22f",
+      chatId: currentChat?.id || "chat",
+      messageId: Crypto.randomUUID(),
       type: "outgoing",
       content: messageText,
       createdAt: new Date(),
-      userId: "user",
+      userId: Crypto.randomUUID(),
+      status: "sending",
     };
 
     if (isConnected) {
@@ -71,7 +81,7 @@ export default function ChatScreen() {
     return (
       <FlatList
         data={messages}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.messageId}
         renderItem={renderMessage}
         contentContainerStyle={styles.messageList}
         showsVerticalScrollIndicator={false}
@@ -88,6 +98,7 @@ export default function ChatScreen() {
         <ChatHeader
           onBackPress={() => router.back()}
           isConnected={isConnected}
+          title={currentChat?.title}
         />
         {messages && messages.length === 0 ? <EmptyChat /> : chat()}
         <MessageInput

@@ -1,9 +1,11 @@
 export type MessageType = {
-  id: string;
+  chatId: string;
+  messageId: string;
   type: "income" | "outgoing";
   content: string;
   createdAt: Date;
   userId: string;
+  status: "delivered" | "notDelivered" | "sending";
 };
 
 export type ChatType = {
@@ -12,16 +14,19 @@ export type ChatType = {
   messages: MessageType[];
 };
 
-export type MessageDeliveredType = {
-  id: string;
-  status: "delivered";
-  deliveredAt: Date;
+export type MessageDeliveredStatusType = {
+  chatId: string;
+  messageId: string;
+  status: "delivered" | "notDelivered" | "sending";
+  deliveredAt?: Date | null;
 };
 
 export type onMessageEventType = (message: MessageType) => void;
 export type onMessageDeliveredStatusEventType = (
-  message: MessageDeliveredType,
+  message: MessageDeliveredStatusType,
 ) => void;
-export type onMessageErrorEventType = (error: { message: string }) => void;
+export type onMessageErrorEventType = (
+  error: MessageDeliveredStatusType,
+) => void;
 export type onConnectEventType = () => void;
 export type onDisconnectEventType = () => void;

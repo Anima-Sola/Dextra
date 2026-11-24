@@ -15,6 +15,11 @@ export interface ISettingsSlice {
 export interface IChatsSlice {
   chats: ChatType[];
   addChatMessage: (chatId: string, message: MessageType) => void;
+  updateMessageStatus: (
+    chatId: string,
+    messageId: string,
+    status: MessageType["status"],
+  ) => void;
 }
 
 export interface IUserSlice {
@@ -44,6 +49,7 @@ export interface ITheme {
     actionCardBackgroundColors: string[];
     actionCardArrowColors: string[];
     onlineDot: string;
+    notDelivered: string;
     messageBackgoundColor: string;
   };
 }

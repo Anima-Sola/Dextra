@@ -1,5 +1,5 @@
 import {
-  MessageDeliveredType,
+  MessageDeliveredStatusType,
   MessageType,
   onConnectEventType,
   onDisconnectEventType,
@@ -38,11 +38,11 @@ class SocketService {
       this.messageListeners.forEach((callback) => callback(message));
     });
 
-    socket.on("message:delivered", (message: MessageDeliveredType) => {
+    socket.on("message:delivered", (message: MessageDeliveredStatusType) => {
       this.messageDeliveredListeners.forEach((callback) => callback(message));
     });
 
-    socket.on("chat:error", (error: { message: string }) => {
+    socket.on("chat:error", (error: MessageDeliveredStatusType) => {
       this.errorListeners.forEach((callback) => callback(error));
     });
 

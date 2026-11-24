@@ -1,19 +1,21 @@
 import fontSizes from "@/constants/fontSizes";
 import { ITheme } from "@/constants/interfaces";
 import { useThemedStyles } from "@/hooks/useThemedStyles";
-import { useSettingsStore } from "@/store/settingsStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type ChatType = {
   onBackPress: () => void;
   isConnected: boolean;
+  title?: string;
 };
 
-export default function ChatHeader({ onBackPress, isConnected }: ChatType) {
+export default function ChatHeader({
+  onBackPress,
+  isConnected,
+  title = "Чат",
+}: ChatType) {
   const styles = useThemedStyles(createStyles);
-  const { appName } = useSettingsStore();
-
   const connectStatusText = isConnected ? "Online" : "Offline";
   const dotStyle = isConnected ? styles.onlineDot : styles.offlineDot;
 
@@ -31,7 +33,7 @@ export default function ChatHeader({ onBackPress, isConnected }: ChatType) {
         />
       </TouchableOpacity>
       <View style={styles.headerTitle}>
-        <Text style={styles.agentName}>{appName}</Text>
+        <Text style={styles.agentName}>{title}</Text>
         <Text style={styles.online}>
           <Text style={dotStyle}>● </Text>
           {connectStatusText}
